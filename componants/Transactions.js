@@ -1,7 +1,12 @@
 import React from "react";
+import NumberFormat from "react-number-format";
+
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useTransaction } from "../context/transactionProvider";
 
 const Transactions = () => {
+  const { transactions, numberFormat } = useTransaction();
+
   return (
     <>
       <View style={styles.historyWrapper}>
@@ -12,50 +17,23 @@ const Transactions = () => {
           <Text style={styles.thText}>Name</Text>
           <Text style={styles.thText}>Rupees</Text>
         </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
-        <View style={styles.tableTextWrapper}>
-          <Text style={styles.tdText}>Home Maintenance</Text>
-          <Text style={styles.tdText}>10,000</Text>
-        </View>
+        {transactions.map((item) => (
+          <View style={styles.tableTextWrapper}>
+            <Text style={styles.tdText}>{item.title}</Text>
+            <NumberFormat
+              value={item.amount}
+              className="foo"
+              displayType={"text"}
+              thousandSeparator={true}
+              prefix={"Rs "}
+              renderText={(value, props) => (
+                <Text style={styles.tdText} {...props}>
+                  {value}
+                </Text>
+              )}
+            />
+          </View>
+        ))}
       </ScrollView>
     </>
   );

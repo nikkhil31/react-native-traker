@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, StatusBar } from "react-native";
 
 const Header = () => {
   return (
@@ -20,8 +20,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 18,
-    borderBottomEndRadius: 27,
-    borderBottomStartRadius: 27,
+    borderBottomEndRadius: 15,
+    borderBottomStartRadius: 15,
+    marginTop: StatusBar.currentHeight,
+    // paddingBottom: 23,
   },
   balText: {
     fontSize: 20,
