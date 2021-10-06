@@ -1,11 +1,26 @@
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View, StatusBar } from "react-native";
+import NumberFormat from "react-number-format";
+import { useTransaction } from "../context/transactionProvider";
 
 const Header = () => {
+  const { currentAmount } = useTransaction();
+  console.log("current amount--->", currentAmount);
   return (
     <View style={styles.header}>
       <Text style={styles.balText}>Current Balance</Text>
-      <Text style={styles.balText}>$ 30,000</Text>
+      <NumberFormat
+        value={currentAmount}
+        displayType={"text"}
+        thousandSeparator={true}
+        thousandsGroupStyle="lakh"
+        prefix={"₹"}
+        renderText={(value, props) => (
+          <Text style={styles.balText} {...props}>
+            {value}
+          </Text>
+        )}
+      />
     </View>
   );
 };

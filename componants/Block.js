@@ -1,14 +1,26 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import NumberFormat from "react-number-format";
 
-const Block = () => {
+const Block = ({ text, amount }) => {
   return (
     <View style={styles.mainView}>
       <View style={styles.wordWrapper}>
-        <Text style={styles.lable}>Income</Text>
+        <Text style={styles.lable}>{text}</Text>
       </View>
       <View style={styles.amountWrapper}>
-        <Text style={styles.amount}>$ 20,000</Text>
+        <NumberFormat
+          value={amount}
+          displayType={"text"}
+          thousandSeparator={true}
+          thousandsGroupStyle="lakh"
+          prefix={"₹"}
+          renderText={(value, props) => (
+            <Text style={styles.amount} {...props}>
+              {value}
+            </Text>
+          )}
+        />
       </View>
     </View>
   );

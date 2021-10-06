@@ -8,18 +8,38 @@ import {
   Button,
   Alert,
   Keyboard,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
+import { useTransaction } from "../context/transactionProvider";
 import BottomButton from "./BottomButton";
 
-export default function AddForm() {
+export default function AddForm({ handleClose }) {
+  const { addTransactions } = useTransaction();
+
   const [sign, setSign] = useState(true);
+
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState();
+
+  const handleOnPress = () => {
+    let fAmount = Number((sign ? 1 : -1) * amount);
+    addTransactions(title, fAmount);
+    setTitle("");
+    setAmount();
+    handleClose();
+  };
 
   return (
     <View style={styles.formWrapper}>
       <Text style={styles.mainTitle}>Transactions</Text>
       <View style={styles.formGroup}>
         <Text style={styles.formTitle}>Title</Text>
-        <TextInput style={styles.input} />
+        <TextInput
+          style={styles.input}
+          value={title}
+          onChangeText={(text) => setTitle(text)}
+        />
       </View>
       <View style={styles.formGroup}>
         <Text style={styles.formTitle}>Amount</Text>
@@ -39,11 +59,16 @@ export default function AddForm() {
               {sign ? "+" : "-"}
             </Text>
           </TouchableOpacity>
-          <TextInput style={[styles.input, { width: "79%" }]} />
+          <TextInput
+            style={[styles.input, { width: "79%" }]}
+            value={amount}
+            onChangeText={(text) => setAmount(text)}
+            keyboardType="numeric"
+          />
         </View>
       </View>
       <View style={styles.formGroup}>
-        <BottomButton onPress={() => Keyboard.dismiss()} />
+        <BottomButton onPress={() => handleOnPress()} />
       </View>
     </View>
   );
