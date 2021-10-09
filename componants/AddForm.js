@@ -1,3 +1,4 @@
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -14,7 +15,7 @@ import {
 import { useTransaction } from "../context/transactionProvider";
 import BottomButton from "./BottomButton";
 
-export default function AddForm({ handleClose }) {
+export default function AddForm({ handleClose,isSubmitted }) {
   const { addTransactions } = useTransaction();
 
   const [sign, setSign] = useState(true);
@@ -27,10 +28,12 @@ export default function AddForm({ handleClose }) {
     addTransactions(title, fAmount);
     setTitle("");
     setAmount();
+    isSubmitted(true)
     handleClose();
   };
 
   return (
+   
     <View style={styles.formWrapper}>
       <Text style={styles.mainTitle}>Transactions</Text>
       <View style={styles.formGroup}>
@@ -75,6 +78,9 @@ export default function AddForm({ handleClose }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   formWrapper: {
     margin: 12,
   },

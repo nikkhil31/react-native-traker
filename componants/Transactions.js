@@ -28,6 +28,9 @@ const Transactions = () => {
         <Text style={styles.thText}>Rupees</Text>
       </View>
       <SwipeListView
+      keyExtractor={(rowData, index) => {
+        return index.toString();
+      }}
         data={transactions}
         renderItem={(data, rowMap) => (
           <View style={styles.tableTextWrapper} key={data.index}>

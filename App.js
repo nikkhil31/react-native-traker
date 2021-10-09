@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Keyboard, StyleSheet, View } from "react-native";
 import BottomSheet from "@gorhom/bottom-sheet";
 import BottomButton from "./componants/BottomButton";
@@ -10,40 +10,49 @@ import { TransactionProvider } from "./context/transactionProvider";
 import Blocks from "./componants/Blocks";
 
 export default function App() {
+
+  const [snap, setSnap] = useState(-1)
+  const [keyboardStatus, setKeyboardStatus] = useState(0)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   // ref
   const bottomSheetRef = useRef(null);
   // variables
 
-  const snapPoints = useMemo(() => ["50%", "70%"], []);
+  const snapPoints = useMemo(() => ["50%","70%"], []);
   // callbacks
   const handleSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
     if (index === -1) return Keyboard.dismiss();
     if (index === 0) return Keyboard.dismiss();
+    setSnap(index)
   }, []);
 
-  const handlePress = () => bottomSheetRef.current.snapToIndex(0);
+  const handlePress = (index = 0) => bottomSheetRef.current.snapToIndex(index);
 
   const handleClose = () => bottomSheetRef.current.close();
 
   useEffect(() => {
-    Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
-    Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+   const showKeybord = Keyboard.addListener("keyboardDidShow", () => setKeyboardStatus(1));
+   const hideKeybord = Keyboard.addListener("keyboardDidHide", () => setKeyboardStatus(0));
 
     // cleanup function
     return () => {
-      Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
-      Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+      showKeybord.remove()
+      hideKeybord.remove()
     };
   }, []);
 
-  const _keyboardDidShow = () => {
-    bottomSheetRef.current.snapToIndex(1);
-  };
+  useEffect(() => {
+    console.log('abc----->',keyboardStatus)
+    console.log('snap---->',snap)
 
-  const _keyboardDidHide = () => {
-    bottomSheetRef.current.snapToIndex(0);
-  };
+    if(keyboardStatus === 1) {
+      handlePress(1)
+    } else if(keyboardStatus === 0 && !isSubmitted) {
+      handlePress(0)
+    }
+
+  }, [keyboardStatus])
 
   return (
     <TransactionProvider>
@@ -59,9 +68,10 @@ export default function App() {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         enablePanDownToClose={true}
-        keyboardBehavior="extend"
+        keyboardBehavior="interactive"
+        keyboardBlurBehavior="restore"
       >
-        <AddForm handleClose={handleClose} />
+        <AddForm handleClose={handleClose} isSubmitted={setIsSubmitted} />
       </BottomSheet>
 
       <StatusBar style="auto" />
